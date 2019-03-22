@@ -1,0 +1,81 @@
+az-configuration: [
+  {
+    name: ((az-configuration/az1))
+  }
+]
+properties-configuration:
+  director_configuration:
+    ntp_servers_string: ((director_configuration/ntp_servers_string))
+    post_deploy_enabled: ((director_configuration/post_deploy_enabled))
+    resurrector_enabled: ((director_configuration/resurrector_enabled))
+  iaas_configuration:
+    access_key_id: ((iaas_configuration/access_key_id))
+    secret_access_key: ((iaas_configuration/secret_access_key))
+    key_pair_name: ((iaas_configuration/key_pair_name))
+    region: ((iaas_configuration/region))
+    security_group: ((iaas_configuration/security_group))
+    ssh_private_key: ((iaas_configuration/ssh_private_key))
+  security_configuration:
+    opsmanager_root_ca_trusted_certs: ((security_configuration/opsmanager_root_ca_trusted_certs))
+networks-configuration:
+  networks: [
+    {
+      name: ((networks-configuration/networks/infra/name)),
+      subnets: [
+        {
+          iaas_identifier: ((networks-configuration/networks/infra/az1/subnet_id)),
+          cidr: ((networks-configuration/networks/infra/az1/cidr)),
+          reserved_ip_ranges: ((networks-configuration/networks/infra/az1/reserved_ip_ranges)),
+          dns: ((networks-configuration/networks/infra/az1/dns)),
+          gateway: ((networks-configuration/networks/infra/az1/gateway)),
+          availability_zone_names: [
+            ((az-configuration/az1)),
+          ]
+        }
+      ]
+    },
+    {
+      name: ((networks-configuration/networks/runtime/name)),
+      subnets: [
+        {
+          iaas_identifier: ((networks-configuration/networks/runtime/az1/subnet_id)),
+          cidr: ((networks-configuration/networks/runtime/az1/cidr)),
+          reserved_ip_ranges: ((networks-configuration/networks/runtime/az1/reserved_ip_ranges)),
+          dns: ((networks-configuration/networks/runtime/az1/dns)),
+          gateway: ((networks-configuration/networks/runtime/az1/gateway)),
+          availability_zone_names: [
+            ((az-configuration/az1)),
+          ]
+        }
+      ]
+    },
+    {
+      name: ((networks-configuration/networks/services/name)),
+      subnets: [
+        {
+          iaas_identifier: ((networks-configuration/networks/services/az1/subnet_id)),
+          cidr: ((networks-configuration/networks/services/az1/cidr)),
+          reserved_ip_ranges: ((networks-configuration/networks/services/az1/reserved_ip_ranges)),
+          dns: ((networks-configuration/networks/services/az1/dns)),
+          gateway: ((networks-configuration/networks/services/az1/gateway)),
+          availability_zone_names: [
+            ((az-configuration/az1)),
+          ]
+        }
+      ]
+    }
+  ]
+network-assignment:
+  singleton_availability_zone: {
+    name: ((az-configuration/az1))
+  }
+  network: {
+    name: ((networks-configuration/networks/infra/name))
+  }
+
+resource-configuration:
+  compilation:
+    instances: ((resource-configuration/compilation/instances))
+  director:
+    instance_type:
+      id: ((resource-configuration/director/instance_type/id))

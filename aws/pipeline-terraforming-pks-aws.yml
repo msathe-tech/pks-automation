@@ -1,0 +1,50 @@
+resource_types:
+- name: terraform
+  type: docker-image
+  source:
+    repository: ljfranklin/terraform-resource
+    tag: beta-backend
+
+resources:
+- name: terraforming-aws
+  type: git
+  source:
+    uri: git@github.com:pivotal-cf/terraforming-aws.git
+    private_key: ((git_private_key))
+
+- name: env-state-aws
+  type: terraform
+  source:
+    env_name: ((env_name))
+    backend_type: s3
+    backend_config:
+      bucket: platform-automation-terraform
+      key: pks-on-aws/terraform.tfstate
+      region: us-east-1
+      access_key: ((access_key))
+      secret_key: ((secret_key))
+    vars:
+      env_name: ((env_name))
+
+- name: credentials
+  type: git
+  source:
+    uri: git@github.com:msathe-tech/platform-automation-private.git
+    private_key: ((git_private_key))
+
+jobs:
+- name: setup-aws-install-opsman
+  plan:
+  - aggregate:
+    - get: terraforming-aws
+      trigger: false
+    - get: credentials
+      params:
+        unpack: true
+  - do:
+    - put: env-state-aws
+      params:
+        env_name: ((env_name))
+        terraform_source: terraforming-aws/terraforming-pks
+        delete_on_failure: true
+        var_files: [credentials/pks-terraform.tfvars]

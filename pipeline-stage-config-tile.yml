@@ -1,0 +1,138 @@
+resource_types:
+- name: pivnet
+  type: docker-image
+  source:
+    repository: pivotalcf/pivnet-resource
+    tags: latest-final
+
+resources:
+- name: pcf-automation
+  type: pivnet
+  source:
+    api_token: ((pivnet_token))
+    product_slug: platform-automation
+
+- name: configuration
+  type: git
+  source:
+    uri: https://github.com/msathe-tech/platform-automation.git
+
+- name: credentials
+  type: git
+  source:
+    uri: git@github.com:msathe-tech/platform-automation-private.git
+    private_key: ((git_private_key))
+
+- name: tcg-config
+  type: git 
+  source: 
+    uri: git@github.com:msathe-tech/tcg.git
+    private_key: ((git_private_key))
+
+jobs:
+- name: stage-((pivnet-product-slug))
+  serial: true
+  plan:
+  - aggregate:
+    - get: configuration
+      trigger: false
+      params:
+        unpack: true
+    - get: pcf-automation-image
+      resource: pcf-automation
+      params:
+        unpack: true
+        globs: ["*image*"]
+    - get: pcf-automation-tasks
+      resource: pcf-automation
+      params:
+        unpack: true
+        globs: ["*tasks*"]
+    - get: credentials
+      params:
+        unpack: true
+    - get: tcg-config 
+      params:
+        unpack: true
+
+  - task: creds-interpolate
+    image: pcf-automation-image
+    file: configuration/fixes/tasks/creds-interpolate.yml
+    input_mapping:
+      config: configuration
+      vars: credentials
+    params:
+      VARS_FILES: vars/creds-((foundation))-((pivnet-product-slug)).yml
+      CONFIG_FILE: ((foundation))/config/templates/env.yml
+    output_mapping:
+      interpolated-files: configuration
+
+  - task: download-((pivnet-product-slug))
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/download-product.yml
+    input_mapping:
+      config: configuration
+      secrets: credentials
+    params:
+      CONFIG_FILE: ((foundation))/config/versions/((pivnet-product-slug)).yml
+      VARS_FILES: secrets/creds-((foundation))-((pivnet-product-slug)).yml
+
+  - task: upload-product
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/upload-product.yml
+    input_mapping:
+      product: downloaded-product
+      env: configuration
+    params:
+      ENV_FILE: ((foundation))/config/templates/env.yml
+
+  - task: stage-product
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/stage-product.yml
+    input_mapping:
+      product: downloaded-product
+      env: configuration
+    params:
+      ENV_FILE: ((foundation))/config/templates/env.yml
+
+  - task: upload-stemcell
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/upload-stemcell.yml
+    input_mapping:
+      env: configuration
+      stemcell: downloaded-stemcell
+    params:
+      ENV_FILE: ((foundation))/config/templates/env.yml
+
+  - task: assign-stemcell
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/assign-stemcell.yml
+    input_mapping:
+      env: configuration
+      config: assign-stemcell-config
+    params:
+      ENV_FILE: ((foundation))/config/templates/env.yml
+
+  - task: product-ops-interpolate
+    image: pcf-automation-image
+    file: configuration/fixes/tasks/product-ops-interpolate.yml
+    input_mapping:
+      config: tcg-config
+      secrets: credentials
+    params:
+      SECRETS_FILE: secrets/creds-((foundation))-((pivnet-product-slug)).yml
+    output_mapping:
+      interpolated-files: tcg-config
+
+  - task: tileconfig-((pivnet-product-slug))
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/configure-product.yml
+    input_mapping:
+      config: tcg-config
+      env: configuration
+      vars: tcg-config
+      secrets: credentials
+    params:
+      CONFIG_FILE: ((pivnet-product-slug))/((product-version))/product_and_ops.yml
+      VARS_FILES: vars/((pivnet-product-slug))/((product-version))/product-default-vars.yml vars/((pivnet-product-slug))/((product-version))/resource-vars.yml vars/((pivnet-product-slug))/((product-version))/errand-vars.yml secrets/creds-((foundation))-((pivnet-product-slug)).yml
+      ENV_FILE: ((foundation))/config/templates/env.yml

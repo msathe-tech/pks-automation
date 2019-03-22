@@ -1,0 +1,71 @@
+resource_types:
+- name: pivnet
+  type: docker-image
+  source:
+    repository: pivotalcf/pivnet-resource
+    tags: latest-final
+
+resources:
+- name: pcf-automation
+  type: pivnet
+  source:
+    api_token: ((pivnet_token))
+    product_slug: platform-automation
+
+- name: configuration
+  type: git
+  source:
+    uri: https://github.com/msathe-tech/platform-automation.git
+
+- name: credentials
+  type: git
+  source:
+    uri: git@github.com:msathe-tech/platform-automation-private.git
+    private_key: ((git_private_key))
+
+jobs:
+- name: configure-((pivnet-product-slug))
+  serial: true
+  plan:
+  - aggregate:
+    - get: configuration
+      trigger: false
+      params:
+        unpack: true
+    - get: pcf-automation-image
+      resource: pcf-automation
+      params:
+        unpack: true
+        globs: ["*image*"]
+    - get: pcf-automation-tasks
+      resource: pcf-automation
+      params:
+        unpack: true
+        globs: ["*tasks*"]
+    - get: credentials
+      params:
+        unpack: true
+
+  - task: creds-interpolate
+    image: pcf-automation-image
+    file: configuration/fixes/tasks/creds-interpolate.yml
+    input_mapping:
+      config: configuration
+      vars: credentials
+    params:
+      VARS_FILES: vars/creds-((foundation))-((pivnet-product-slug)).yml
+      CONFIG_FILE: ((foundation))/config/templates/env.yml
+    output_mapping:
+      interpolated-files: configuration
+
+  - task: tileconfig-((pivnet-product-slug))
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/configure-director.yml
+    input_mapping:
+      config: configuration
+      env: configuration
+      vars: credentials
+    params:
+      DIRECTOR_CONFIG_FILE: ((foundation))/config/((foundation))-bosh-director.yml
+      VARS_FILES: vars/creds-((foundation))-((pivnet-product-slug)).yml
+      ENV_FILE: ((foundation))/config/templates/env.yml
