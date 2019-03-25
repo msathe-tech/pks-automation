@@ -1,3 +1,7 @@
+echo "Make sure you are in the secrets/credentials repo directory"
+echo "This script expects the files to be available in the current directory"
+echo "Make sure you have updated terraform.tfstate with the latest Terraform state"
+
 echo "Enter ENV_NAME (env_name in tfvars file) [default=pvtl]: "
 read ENV_NAME
 ENV_NAME=${ENV_NAME:-pvtl}
