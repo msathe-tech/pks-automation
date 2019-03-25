@@ -12,28 +12,30 @@ Check your IaaS requirements here - https://docs.pivotal.io/runtimes/pks/1-3/aws
 
 # Prepare to automate PKS
 1. Create a private GIT repo for secrets files required in the pipelines. For this lab we will use secret repo created here.
-We have used local folder ~/workspace/pcf-automation/platform-automation-private for this repo.
+We have used local folder `~/workspace/pcf-automation/platform-automation-private` for this repo.
 
-2. Create pks-terraform.tfvars in your secrets (pvt) repo with details mentioned here - https://docs.pivotal.io/pivotalcf/2-4/om/aws/prepare-env-terraform.html#download Remember the Region and AZ you selected here.
+2. Create pks-terraform.tfvars in your secrets (pvt) repo with details mentioned here - https://docs.pivotal.io/pivotalcf/2-4/om/aws/prepare-env-terraform.html#download Remember the Region and AZ you selected here. This file is used as input for the terraform script. Sample here - https://github.com/msathe-tech/pks-automation/blob/master/credentials/pks-terraform.tfvars
 
-3. Create bosh-director-tfstate-map.yml in your in your secrets (pvt) repo. This file is used to create secrets for BOSH director tile. Sample -
+3. Create creds-terraforming-aws.yml in your secrets (pvt) repo. Sample - https://github.com/msathe-tech/pks-automation/blob/master/credentials/creds-terraforming-aws.yml
 
-4. Create pks-tfstate-map.yml file in your in your secrets (pvt) repo. This file is used to create secrets for PKS tile. Sample -
+4. Create bosh-director-tfstate-map.yml in your in your secrets (pvt) repo. This file is used to create secrets for BOSH director tile. Sample - https://github.com/msathe-tech/pks-automation/blob/master/credentials/bosh-director-tfstate-map.yml
 
-5. Create terraform-tfstate-keys.txt in your secrets (pvt) repo. This file has keys for bosh-director-tfstate-map.yml. Sample -
+5. Create pks-tfstate-map.yml file in your in your secrets (pvt) repo. This file is used to create secrets for PKS tile. Sample - https://github.com/msathe-tech/pks-automation/blob/master/credentials/pks-tfstate-map.yml
 
-6. Create pks-terraform-tfstate-keys.txt in your secrets (pvt) repo. This file has keys for pks-tfstate-map.yml. Sample -
+6. Create terraform-tfstate-keys.txt in your secrets (pvt) repo. This file has keys for bosh-director-tfstate-map.yml. Sample - https://github.com/msathe-tech/pks-automation/blob/master/credentials/terraform-tfstate-keys.txt
 
-7. cp the .sh scripts to the secrets repo folder. The script assumes files in current directory.
+7. Create pks-terraform-tfstate-keys.txt in your secrets (pvt) repo. This file has keys for pks-tfstate-map.yml. Sample - https://github.com/msathe-tech/pks-automation/blob/master/credentials/pks-terraform-tfstate-keys.txt
+
+8. Copy the .sh scripts to the secrets repo folder. These scripts extract values from the tfstate file of the Terraform execution and populate the YAMLs for the BOSH director and PKS tiles. The script assumes all files in current directory so it is important that you copy the the scripts in the secrets (pvt) repo folder.
 
 # Go!
 1. Setup a pipeline to automate IaaS and Ops Man setup.
-fly -t w sp -p terraforming-pks-on-aws \
---config aws/pipeline-terraforming-pks-aws.yml \
---load-vars-from ~/workspace/pcf-automation/platform-automation-private/creds-terraforming-aws.yml \
---var "git_private_key=$(cat ~/.ssh/id_rsa)"
+    `fly -t w sp -p terraforming-pks-on-aws \
+    --config aws/pipeline-terraforming-pks-aws.yml \
+    --load-vars-from ~/workspace/pcf-automation/platform-automation-private/creds-terraforming-aws.yml \
+    --var "git_private_key=$(cat ~/.ssh/id_rsa)"`
 
-fly -t w up -p terraforming-pks-on-aws
+    `fly -t w up -p terraforming-pks-on-aws`
 
 2. Navigate to your Concourse UI and kick star terraforming-pks-on-aws/setup-aws-install-opsman job.
 
@@ -45,20 +47,20 @@ fly -t w up -p terraforming-pks-on-aws
 
 6. Setup a pipeline to setup BOSH director
 
-fly -t w sp -p aws-config-director \
---config aws/pipeline-config-p-bosh.yml \
---load-vars-from ~/workspace/pcf-automation/platform-automation-private/creds-aws-p-bosh.yml \
---var "git_private_key=$(cat ~/.ssh/id_rsa)"
+    `fly -t w sp -p aws-config-director \
+    --config aws/pipeline-config-p-bosh.yml \
+    --load-vars-from ~/workspace/pcf-automation/platform-automation-private/creds-aws-p-bosh.yml \
+    --var "git_private_key=$(cat ~/.ssh/id_rsa)"`
 
-fly -t w up -p aws-config-director
+    `fly -t w up -p aws-config-director`
 
 7. Navigate to your Concourse UI and start the aws-config-director/configure-p-bosh job.
 
 8. Setup a pipeline to stage and configure PKS tile
 
-fly -t w sp -p aws-stage-config-pks \
---config aws/pipeline-stage-config-pks.yml \
---load-vars-from ~/workspace/pcf-automation/platform-automation-private/creds-aws-pivotal-container-service.yml \
---var "git_private_key=$(cat ~/.ssh/id_rsa)"
+    `fly -t w sp -p aws-stage-config-pks \
+    --config aws/pipeline-stage-config-pks.yml \
+    --load-vars-from ~/workspace/pcf-automation/platform-automation-private/creds-aws-pivotal-container-service.yml \
+    --var "git_private_key=$(cat ~/.ssh/id_rsa)"`
 
-fly -t w up -p aws-stage-config-pks
+    `fly -t w up -p aws-stage-config-pks`
