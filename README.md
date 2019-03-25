@@ -1,6 +1,6 @@
 # pks-automation
 
-#Overview
+# Overview
 This automation installs PKS from scratch on any cloud, well, on AWS in first phase.
 This is done in four stages.
 First, we lay out IaaS components on your chosen cloud. We have taken AWS as the first cloud to start with.
@@ -12,7 +12,7 @@ And last, we will configure the PKS tile using the creds populated earlier.
 
 Check your IaaS requirements here - https://docs.pivotal.io/runtimes/pks/1-3/aws-requirements.html
 
-#Prepare to automate PKS
+# Prepare to automate PKS
 1. Create a private GIT repo for secrets files required in the pipelines. For this lab we will use secret repo created here.
 We have used local folder ~/workspace/pcf-automation/platform-automation-private for this repo.
 
@@ -28,7 +28,7 @@ We have used local folder ~/workspace/pcf-automation/platform-automation-private
 
 7. cp the .sh scripts to the secrets repo folder. The script assumes files in current directory.
 
-#Go!
+# Go!
 1. Setup a pipeline to automate IaaS and Ops Man setup.
 fly -t w sp -p terraforming-pks-on-aws \
 --config aws/pipeline-terraforming-pks-aws.yml \
