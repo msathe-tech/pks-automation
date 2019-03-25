@@ -46,7 +46,7 @@ We have used local folder `~/workspace/pcf-automation/platform-automation-privat
 
 4. Use `aws configure` to login to aws
 
-5. Go to the secrets repo folder and run state-to-creds.sh
+5. Go to the secrets repo folder, run `chmod +x *.sh` and then execute `state-to-creds.sh`. 
 
 6. Setup a pipeline to setup BOSH director
 
