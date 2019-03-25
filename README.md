@@ -1,5 +1,3 @@
-# pks-automation
-
 # Overview
 This automation installs PKS from scratch on any cloud, well, on AWS in first phase.
 This is done in four stages.
