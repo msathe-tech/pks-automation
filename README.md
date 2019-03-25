@@ -1,11 +1,14 @@
 # Overview
 This automation installs PKS from scratch on any cloud, well, on AWS in first phase.
 This is done in four stages.
+
 First, we lay out IaaS components on your chosen cloud. We have taken AWS as the first cloud to start with.
-Amazon can thank me.
+
 Second, we download the Terraform tfstate file, and use it to populate the creds files.
 These are the creds files we will use for BOSH and PKS configuration.
+
 Third, we will configure the BOSH director using the creds populated earlier.
+
 And last, we will configure the PKS tile using the creds populated earlier.
 
 Check your IaaS requirements here - https://docs.pivotal.io/runtimes/pks/1-3/aws-requirements.html
