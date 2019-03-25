@@ -40,13 +40,13 @@ We have used local folder `~/workspace/pcf-automation/platform-automation-privat
 
     `fly -t w up -p terraforming-pks-on-aws`
 
-2. Navigate to your Concourse UI and kick star terraforming-pks-on-aws/setup-aws-install-opsman job.
+2. Navigate to your Concourse UI and kick star `terraforming-pks-on-aws/setup-aws-install-opsman` job.
 
 3. Upon successful completion of the pipeline you need to setup Ops Man username and password. For the purpose of this demo we will use admin/admin. If you use something else then you need to change the values in the secrets YAMLs.
 
 4. Use `aws configure` to login to aws
 
-5. Go to the secrets repo folder, run `chmod +x *.sh` and then execute `state-to-creds.sh`. 
+5. Go to the secrets repo folder, run `chmod +x *.sh` and then execute `state-to-creds.sh`.
 
 6. Setup a pipeline to setup BOSH director
 
@@ -57,7 +57,7 @@ We have used local folder `~/workspace/pcf-automation/platform-automation-privat
 
     `fly -t w up -p aws-config-director`
 
-7. Navigate to your Concourse UI and start the aws-config-director/configure-p-bosh job.
+7. Navigate to your Concourse UI and start the `aws-config-director/configure-p-bosh` job.
 
 8. Setup a pipeline to stage and configure PKS tile
 
@@ -67,3 +67,7 @@ We have used local folder `~/workspace/pcf-automation/platform-automation-privat
     --var "git_private_key=$(cat ~/.ssh/id_rsa)"`
 
     `fly -t w up -p aws-stage-config-pks`
+
+9. Navigate to your Concourse UI and start the `aws-stage-config-pks/stage-pivotal-container-service` job
+
+Note - we have kept Step 6 and 8 as separate pipelines to keep it simple and easy to understand and troubleshoot if needed. Ideally, these will be in a same pipeline as two different tasks. 
