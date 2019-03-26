@@ -18,9 +18,9 @@ resources:
     env_name: ((env_name))
     backend_type: s3
     backend_config:
-      bucket: platform-automation-terraform
-      key: pks-on-aws/terraform.tfstate
-      region: us-east-1
+      bucket: ((bucket))
+      key: ((bucket_key))
+      region: ((bucket_region))
       access_key: ((access_key))
       secret_key: ((secret_key))
     vars:
