@@ -14,9 +14,10 @@ And last, we will configure the PKS tile using the creds populated earlier.
 Check your IaaS requirements [here](https://docs.pivotal.io/runtimes/pks/1-3/aws-requirements.html)
 
 # Prepare to automate PKS
-1. Git clone this repo -
+1. We have used local folder `~/workspace/pcf-automation/pks-automation` for this repo. Run
+`mkdir -p ~/workspace/pcf-automation`
+`cd ~/workspace/pcf-automation`
 `git clone https://github.com/msathe-tech/pks-automation.git`
-We have used local folder `~/workspace/pcf-automation/pks-automation` for this repo.
 
 2. Create a private GIT repo for with local folder `~/workspace/pcf-automation/platform-automation-private`.
 To keep things simple, keep the `platform-automation-private` and `pks-automation` repo in the same folder, e.g. `~/workspace/pcf-automation`. Add following files to `platform-automation-private` and git push them.
