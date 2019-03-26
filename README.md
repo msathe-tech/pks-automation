@@ -52,25 +52,23 @@ To keep things simple, keep the `platform-automation-private` and `pks-automatio
     * `chmod +x *.sh`
     * `state-to-creds.sh`
 
-7. Setup a pipeline to setup BOSH director. Open `pipeline-config-p-bosh.yml` and change the GIT URL in the `credentials` resource to use your private git repo.
-
-    `fly -t w sp -p aws-config-director \
+7. Setup a pipeline to setup BOSH director.
+    * Open `pipeline-config-p-bosh.yml` and change the GIT URL in the `credentials` resource to use your private git repo.
+    * `fly -t w sp -p aws-config-director \
     --config pipeline-config-p-bosh.yml \
     --load-vars-from ~/workspace/pcf-automation/platform-automation-private/creds-aws-p-bosh.yml \
     --var "git_private_key=$(cat ~/.ssh/id_rsa)"`
-
-    `fly -t w up -p aws-config-director`
+    * `fly -t w up -p aws-config-director`
 
 8. Navigate to your Concourse UI and start the `aws-config-director/configure-p-bosh` job.
 
-9. Setup a pipeline to stage and configure PKS tile. Open `pipeline-stage-config-pks.yml` and change the GIT URL in the `credentials` resource to use your private git repo.
-
-    `fly -t w sp -p aws-stage-config-pks \
+9. Setup a pipeline to stage and configure PKS tile.
+    * Open `pipeline-stage-config-pks.yml` and change the GIT URL in the `credentials` resource to use your private git repo.
+    * `fly -t w sp -p aws-stage-config-pks \
     --config pipeline-stage-config-pks.yml \
     --load-vars-from ~/workspace/pcf-automation/platform-automation-private/creds-aws-pivotal-container-service.yml \
     --var "git_private_key=$(cat ~/.ssh/id_rsa)"`
-
-    `fly -t w up -p aws-stage-config-pks`
+    * `fly -t w up -p aws-stage-config-pks`
 
 10. Navigate to your Concourse UI and start the `aws-stage-config-pks/stage-pivotal-container-service` job
 
