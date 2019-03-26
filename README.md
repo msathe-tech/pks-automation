@@ -45,7 +45,7 @@ To keep things simple, keep the `platform-automation-private` and `pks-automatio
 
 3. Navigate to your Concourse UI and kick star `terraforming-pks-on-aws/setup-aws-install-opsman` job.
 
-4. Upon successful completion of the pipeline you need to setup Ops Man username and password. For the purpose of this demo we will use @admin/admin. If you use something else then you need to change the values in the secrets YAMLs.
+4. Upon successful completion of the pipeline you need to setup Ops Man username and password. For the purpose of this demo we will use *admin/admin*. If you use something else then you need to change the values in the secrets YAMLs.
 
 5. Use `aws configure` to login to aws
 
