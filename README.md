@@ -24,8 +24,8 @@ Check your IaaS requirements [here](https://docs.pivotal.io/runtimes/pks/1-3/aws
 To keep things simple, keep the `platform-automation-private` and `pks-automation` repo in the same folder, i.e. `~/workspace/pcf-automation`. Add following files to `platform-automation-private` and git push them.
     * `pks-terraform.tfvars` with details mentioned [here](https://docs.pivotal.io/pivotalcf/2-4/om/aws/prepare-env-terraform.html#download) Remember the Region and AZ you selected here. [Sample](https://github.com/msathe-tech/pks-automation/blob/master/credentials/pks-terraform.tfvars)
     * `creds-terraforming-aws.yml` [Sample](https://github.com/msathe-tech/pks-automation/blob/master/credentials/creds-terraforming-aws.yml). Change `bucket` value to the bucket name you created in Step #1.
-    * `bosh-director-tfstate-map.yml` used to create secrets for BOSH director tile. [Sample](https://github.com/msathe-tech/pks-automation/blob/master/credentials/bosh-director-tfstate-map.yml)
-    * `pks-tfstate-map.yml` used to create secrets for PKS tile. [Sample](https://github.com/msathe-tech/pks-automation/blob/master/credentials/pks-tfstate-map.yml)
+    * `bosh-director-tfstate-map.yml` used to create secrets for BOSH director tile. [Sample](https://github.com/msathe-tech/pks-automation/blob/master/credentials/bosh-director-tfstate-map.yml). Revisit this file and change __opsman_userid__ and __opsman_password__ values after you've setup Ops Man.
+    * `pks-tfstate-map.yml` used to create secrets for PKS tile. [Sample](https://github.com/msathe-tech/pks-automation/blob/master/credentials/pks-tfstate-map.yml). Revisit this file and change __opsman_userid__ and __opsman_password__ values after you've setup Ops Man. 
     * `terraform-tfstate-keys.txt` has keys for bosh-director-tfstate-map.yml. [Sample](https://github.com/msathe-tech/pks-automation/blob/master/credentials/terraform-tfstate-keys.txt)
     * `pks-terraform-tfstate-keys.txt` has keys for pks-tfstate-map.yml. [Sample](https://github.com/msathe-tech/pks-automation/blob/master/credentials/pks-terraform-tfstate-keys.txt)
 
