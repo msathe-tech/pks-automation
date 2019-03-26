@@ -11,7 +11,7 @@ Third, we will configure the BOSH director using the creds populated earlier.
 
 And last, we will configure the PKS tile using the creds populated earlier.
 
-Check your IaaS requirements here - https://docs.pivotal.io/runtimes/pks/1-3/aws-requirements.html
+Check your IaaS requirements [here](https://docs.pivotal.io/runtimes/pks/1-3/aws-requirements.html)
 
 # Prepare to automate PKS
 1. Git clone this repo -
@@ -20,12 +20,12 @@ We have used local folder `~/workspace/pcf-automation/pks-automation` for this r
 
 2. Create a private GIT repo for with local folder `~/workspace/pcf-automation/platform-automation-private`.
 To keep things simple, keep the `platform-automation-private` and `pks-automation` repo in the same folder, e.g. `~/workspace/pcf-automation`. Add following files to `platform-automation-private` and git push them.
-    * `pks-terraform.tfvars` with details mentioned [here] (https://docs.pivotal.io/pivotalcf/2-4/om/aws/prepare-env-terraform.html#download) Remember the Region and AZ you selected here. [Sample] (https://github.com/msathe-tech/pks-automation/blob/master/credentials/pks-terraform.tfvars)
+    * `pks-terraform.tfvars` with details mentioned [here](https://docs.pivotal.io/pivotalcf/2-4/om/aws/prepare-env-terraform.html#download) Remember the Region and AZ you selected here. [Sample](https://github.com/msathe-tech/pks-automation/blob/master/credentials/pks-terraform.tfvars)
     * `creds-terraforming-aws.yml` [Sample] (https://github.com/msathe-tech/pks-automation/blob/master/credentials/creds-terraforming-aws.yml)
-    * `bosh-director-tfstate-map.yml` used to create secrets for BOSH director tile. [Sample] (https://github.com/msathe-tech/pks-automation/blob/master/credentials/bosh-director-tfstate-map.yml)
-    * `pks-tfstate-map.yml` used to create secrets for PKS tile. [Sample] (https://github.com/msathe-tech/pks-automation/blob/master/credentials/pks-tfstate-map.yml)
-    * `terraform-tfstate-keys.txt` has keys for bosh-director-tfstate-map.yml. [Sample] (https://github.com/msathe-tech/pks-automation/blob/master/credentials/terraform-tfstate-keys.txt)
-    * `pks-terraform-tfstate-keys.txt` has keys for pks-tfstate-map.yml. [Sample] (https://github.com/msathe-tech/pks-automation/blob/master/credentials/pks-terraform-tfstate-keys.txt)
+    * `bosh-director-tfstate-map.yml` used to create secrets for BOSH director tile. [Sample](https://github.com/msathe-tech/pks-automation/blob/master/credentials/bosh-director-tfstate-map.yml)
+    * `pks-tfstate-map.yml` used to create secrets for PKS tile. [Sample](https://github.com/msathe-tech/pks-automation/blob/master/credentials/pks-tfstate-map.yml)
+    * `terraform-tfstate-keys.txt` has keys for bosh-director-tfstate-map.yml. [Sample](https://github.com/msathe-tech/pks-automation/blob/master/credentials/terraform-tfstate-keys.txt)
+    * `pks-terraform-tfstate-keys.txt` has keys for pks-tfstate-map.yml. [Sample](https://github.com/msathe-tech/pks-automation/blob/master/credentials/pks-terraform-tfstate-keys.txt)
 
 3. Copy the .sh scripts from pks-automation folder to the secrets repo folder. These scripts extract values from the tfstate file of the Terraform execution and populate the YAMLs for the BOSH director and PKS tiles. The script assumes all files in current directory so it is important that you copy the the scripts in the secrets (pvt) repo folder.
 
