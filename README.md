@@ -8,6 +8,8 @@ These are the creds files we will use for BOSH and PKS configuration.
 * Third, we will configure the BOSH director using the creds populated earlier.
 * And last, we will configure the PKS tile using the creds populated earlier.
 
+>Note - we have kept third and fourth step as separate pipelines to keep it easy to understand and troubleshoot if needed. Ideally, >these will be in a same pipeline as two different tasks.
+
 Check your IaaS requirements [here](https://docs.pivotal.io/runtimes/pks/1-3/aws-requirements.html)
 
 # Prepare to automate PKS
@@ -71,5 +73,3 @@ To keep things simple, keep the `platform-automation-private` and `pks-automatio
     * `fly -t w up -p aws-stage-config-pks`
 
 10. Navigate to your Concourse UI and start the `aws-stage-config-pks/stage-pivotal-container-service` job
-
-Note - we have kept Step 6 and 8 as separate pipelines to keep it simple and easy to understand and troubleshoot if needed. Ideally, these will be in a same pipeline as two different tasks.
