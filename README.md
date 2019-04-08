@@ -83,3 +83,6 @@ To keep things simple, keep the `platform-automation-private` and `pks-automatio
     * `fly -t w up -p aws-stage-config-pks`
 
 11. Navigate to your Concourse UI and start the `aws-stage-config-pks/stage-pivotal-container-service` job
+    * You might notice error similar to following - `could not execute "download-product": could not download stemcell: could not download product file stemcells-ubuntu-xenial 170.15: user with email 'ABC@pivotal.io' has not accepted the current EULA for release with 'id'=264505. The EULA for this release can be accepted at https://network.pivotal.io/products/233/releases/264505/eulas/120`
+    * If you see error like the one above you just need to accept the EULA using the URL given in the error. You will need to login to pivnet for the same
+    * Once that is done you can go back and run the pipeline job again
