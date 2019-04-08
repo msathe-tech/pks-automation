@@ -62,7 +62,7 @@ To keep things simple, keep the `platform-automation-private` and `pks-automatio
 7. Run
     * `cd ~/workspace/pcf-automation/platform-automation-private`
     * `chmod +x *.sh`
-    * `state-to-creds.sh` - make sure you enter correct S3 bucket name and key
+    * `./state-to-creds.sh` - make sure you enter correct S3 bucket name and key
 
 8. Setup a pipeline to setup BOSH director.
     * Open `pipeline-config-p-bosh.yml` and change the GIT URL in the `credentials` resource to use your private git repo.
