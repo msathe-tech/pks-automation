@@ -45,16 +45,26 @@ To keep things simple, keep the `platform-automation-private` and `pks-automatio
 
 3. Navigate to your Concourse UI and kick star `terraforming-pks-on-aws/setup-aws-install-opsman` job.
 
-4. Upon successful completion of the pipeline you need to setup Ops Man username and password. For the purpose of this demo we will use __*admin/admin*__. If you use something else then you need to change the values in the secrets YAMLs.
+4. Take a pause here, and pat yourself on the back. Because, you just setup IaaS and OpsMan using full automation. For the purpose of this lab we are using Route53 as DNS. So go ahead and ensure that the Route53 has the new domain created.
 
-5. Use `aws configure` to login to aws
+5. Open the terraform.tfstate file from the S3 bucket and search for `env_dns_zone_name_servers`. Add NS record in the base domain for <env_name>/your_base_domain with entries in `env_dns_zone_name_servers`. Note the public IP from A-record entry for *pcf.<env_name>/your_base_domain*. Give it some time and then run `nslookup pcf.<env_name>/your_base_domain`, ensure that the name resolves to the public IP address you noted earlier.
 
-6. Run
+6. Configure Ops Man user
+    * Access `https://pcf.<env_name>/your_base_domain`
+    * Select *Internal Authentication*
+    * For the purpose of this demo we will use __*admin/admin*__ for Ops Man user. If you use something else then you need to change the values in the secrets YAMLs.
+    * Set passphrase as __*passphrase*__
+    * Create user. This will create a new UAA user called __*admin*__ with password __*admin*__
+    * Ensure you can login to Ops Man using __*admin/admin*__
+
+6. Run `aws configure` to login to aws
+
+7. Run
     * `cd ~/workspace/pcf-automation/platform-automation-private`
     * `chmod +x *.sh`
     * `state-to-creds.sh` - make sure you enter correct S3 bucket name and key
 
-7. Setup a pipeline to setup BOSH director.
+8. Setup a pipeline to setup BOSH director.
     * Open `pipeline-config-p-bosh.yml` and change the GIT URL in the `credentials` resource to use your private git repo.
     * `fly -t w sp -p aws-config-director \
     --config pipeline-config-p-bosh.yml \
@@ -62,9 +72,9 @@ To keep things simple, keep the `platform-automation-private` and `pks-automatio
     --var "git_private_key=$(cat ~/.ssh/id_rsa)"`
     * `fly -t w up -p aws-config-director`
 
-8. Navigate to your Concourse UI and start the `aws-config-director/configure-p-bosh` job.
+9. Navigate to your Concourse UI and start the `aws-config-director/configure-p-bosh` job.
 
-9. Setup a pipeline to stage and configure PKS tile.
+10. Setup a pipeline to stage and configure PKS tile.
     * Open `pipeline-stage-config-pks.yml` and change the GIT URL in the `credentials` resource to use your private git repo.
     * `fly -t w sp -p aws-stage-config-pks \
     --config pipeline-stage-config-pks.yml \
@@ -72,4 +82,4 @@ To keep things simple, keep the `platform-automation-private` and `pks-automatio
     --var "git_private_key=$(cat ~/.ssh/id_rsa)"`
     * `fly -t w up -p aws-stage-config-pks`
 
-10. Navigate to your Concourse UI and start the `aws-stage-config-pks/stage-pivotal-container-service` job
+11. Navigate to your Concourse UI and start the `aws-stage-config-pks/stage-pivotal-container-service` job
